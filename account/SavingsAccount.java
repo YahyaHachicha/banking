@@ -8,6 +8,10 @@ package banking.account;
  */
 public class SavingsAccount implements BankAccount {
     // TODO:
+    private int accountNumber, pin;
+    private CheckingAccount checkingAccount;
+    private double balance;
+    private Customer owner;
 
     /**
      * Creates a new savings bank account for the given customer.
@@ -18,62 +22,77 @@ public class SavingsAccount implements BankAccount {
      */
     public SavingsAccount(int accountNumber, CheckingAccount checkingAccount, int pin){
         // TODO:
+        this.accountNumber = accountNumber;
+        this.checkingAccount = checkingAccount;
+        this.pin = pin;
     }
 
     @Override
     public AccountType getAccountType() {
         // TODO:
-        return null;
+        return AccountType.Savings;
     }
 
     @Override
     public void withdrawMoney(double money) {
         // TODO:
+        if (money > 0 && money <= this.balance) {
+            this.balance -= money;
+        }
     }
 
     @Override
     public void depositMoney(double money) {
         // TODO:
+        if (money > 0){
+            this.balance += money;}
     }
 
     @Override
     public boolean accessibleFromTerminal() {
         // TODO:
+        if (getAccountType() != AccountType.Checking)
+            return false;
         return true;
     }
 
     @Override
     public Customer getOwner() {
         // TODO:
-        return null;
+        return this.owner;
     }
 
     @Override
     public int getAccountNumber() {
         // TODO:
-        return 0;
+        return this.accountNumber;
     }
 
     @Override
     public double getBalance() {
         // TODO:
-        return 0;
+        return this.balance;
     }
 
     @Override
     public void closeAccount() {
         // TODO:
+        AccountType closing = AccountType.Savings;
     }
 
     @Override
     public boolean validatePin(int pin) {
         // TODO:
+        if (this.pin == pin){
+            return true;
+        }
         return false;
     }
 
     @Override
     public String getAccountInformation(){
         // TODO:
-        return null;
+        String accountInformation = "Owner: " + this.owner + ", AccountNumber: " + this.accountNumber + ", Pin: " + this.pin + ", Balance: " + this.balance;
+        return accountInformation;
     }
 }
