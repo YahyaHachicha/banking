@@ -5,6 +5,9 @@ package banking.account;
  */
 public class BaseBankAccount {
     // TODO:
+    private int accountNumber, pin;
+    private Customer owner;
+    private double balance;
     /**
      * Creates a new base bank account for the given customer.
      *
@@ -14,6 +17,9 @@ public class BaseBankAccount {
      */
     public BaseBankAccount(int accountNumber, Customer owner, int pin){
         // TODO:
+        this.accountNumber = accountNumber;
+        this.owner = owner;
+        this.pin = pin;
     }
 
     /**
@@ -23,6 +29,9 @@ public class BaseBankAccount {
      */
     public final boolean validatePin(int pin) {
         // TODO:
+        if (this.pin == pin) {
+            return true;
+        }
         return false;
     }
 
@@ -33,7 +42,7 @@ public class BaseBankAccount {
      */
     public Customer getOwner() {
         // TODO:
-        return null;
+        return this.owner;
     }
 
     /**
@@ -43,7 +52,7 @@ public class BaseBankAccount {
      */
     public final int getAccountNumber() {
         // TODO:
-        return 0;
+        return this.accountNumber;
     }
 
     /**
@@ -52,7 +61,7 @@ public class BaseBankAccount {
      */
     public final double getBalance() {
         // TODO:
-        return 0;
+        return this.balance;
     }
 
     /**
@@ -62,6 +71,9 @@ public class BaseBankAccount {
      */
     public void withdrawMoney(double money) {
         // TODO:
+        if (money > 0 && money <= this.balance) {
+            this.balance -= money;
+        }
     }
 
     /**
@@ -71,5 +83,7 @@ public class BaseBankAccount {
      */
     public final void depositMoney(double money) {
         // TODO:
+        if (money > 0){
+            this.balance += money;}
     }
 }
