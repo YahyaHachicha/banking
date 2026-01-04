@@ -8,10 +8,8 @@ package banking.account;
  */
 public class SavingsAccount implements BankAccount {
     // TODO:
-    private int accountNumber, pin;
-    private CheckingAccount checkingAccount;
-    private double balance;
-    private Customer owner;
+    private CheckingAccount connectedCheckingAccount;
+    private BaseBankAccount baseAccount;
 
     /**
      * Creates a new savings bank account for the given customer.
@@ -22,9 +20,8 @@ public class SavingsAccount implements BankAccount {
      */
     public SavingsAccount(int accountNumber, CheckingAccount checkingAccount, int pin){
         // TODO:
-        this.accountNumber = accountNumber;
-        this.checkingAccount = checkingAccount;
-        this.pin = pin;
+        this.baseAccount = new BaseBankAccount(accountNumber, checkingAccount.getOwner(), pin);
+        this.connectedCheckingAccount = checkingAccount;
     }
 
     @Override
@@ -34,56 +31,55 @@ public class SavingsAccount implements BankAccount {
     }
 
     @Override
+    //Not allowed to withdraw from SavingsAccount so method stays empty
     public void withdrawMoney(double money) {
-        // TODO:
-        if (money > 0 && money <= this.balance) {
-            this.balance -= money;
-        }
     }
 
     @Override
     public void depositMoney(double money) {
         // TODO:
-        if (money > 0){
-            this.balance += money;}
+        this.baseAccount.depositMoney(money);
     }
 
     @Override
     public boolean accessibleFromTerminal() {
         // TODO:
-        if (getAccountType() != AccountType.Checking)
+        if (getAccountType() != AccountType.Checking) {
             return false;
+        }
         return true;
     }
 
     @Override
     public Customer getOwner() {
         // TODO:
-        return this.owner;
+        return this.baseAccount.getOwner();
     }
 
     @Override
     public int getAccountNumber() {
         // TODO:
-        return this.accountNumber;
+        return this.baseAccount.getAccountNumber();
     }
 
     @Override
     public double getBalance() {
         // TODO:
-        return this.balance;
+        return this.baseAccount.getBalance();
     }
 
     @Override
     public void closeAccount() {
-        // TODO:
-        AccountType closing = AccountType.Savings;
+        if (this.baseAccount.getBalance() > 0) {
+            connectedCheckingAccount.depositMoney(this.baseAccount.getBalance());
+            this.baseAccount.withdrawMoney(this.baseAccount.getBalance()); //balance set to zero.
+        }
     }
 
     @Override
     public boolean validatePin(int pin) {
         // TODO:
-        if (this.pin == pin){
+        if (baseAccount.validatePin(pin)){
             return true;
         }
         return false;
@@ -92,7 +88,7 @@ public class SavingsAccount implements BankAccount {
     @Override
     public String getAccountInformation(){
         // TODO:
-        String accountInformation = "Owner: " + this.owner + ", AccountNumber: " + this.accountNumber + ", Pin: " + this.pin + ", Balance: " + this.balance;
+        String accountInformation = "Owner: " + this.baseAccount.getOwner() + ", AccountNumber: " + this.baseAccount.getAccountNumber() + ", Balance: " + this.baseAccount.getBalance();
         return accountInformation;
     }
 }

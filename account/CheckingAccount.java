@@ -8,9 +8,7 @@ package banking.account;
  */
 public class CheckingAccount implements BankAccount {
     // TODO:
-    private int accountNumber, pin;
-    private Customer owner;
-    private double balance;
+    private BaseBankAccount baseAccount;
 
     /**
      * Creates a new checking bank account for the given customer.
@@ -21,9 +19,8 @@ public class CheckingAccount implements BankAccount {
      */
     public CheckingAccount(int accountNumber, Customer owner, int pin) {
         // TODO:
-        this.accountNumber = accountNumber;
-        this.owner = owner;
-        this.pin = pin;
+        this.baseAccount = new BaseBankAccount(accountNumber, owner, pin);
+
     }
 
     @Override
@@ -34,14 +31,17 @@ public class CheckingAccount implements BankAccount {
 
     @Override
     public final void closeAccount() {
-        // TODO:
-        AccountType closing = AccountType.Savings;
+        //TODO:
+        double balance = baseAccount.getBalance();
+        if (balance > 0) {
+            baseAccount.withdrawMoney(balance);
+        }
     }
 
     @Override
     public boolean validatePin(int pin) {
         // TODO:
-        if (this.pin == pin) {
+        if (baseAccount.validatePin(pin)) {
             return true;
         }
         return false;
@@ -50,40 +50,37 @@ public class CheckingAccount implements BankAccount {
     @Override
     public Customer getOwner() {
         // TODO:
-        return this.owner;
+        return baseAccount.getOwner();
     }
 
     @Override
     public int getAccountNumber() {
         // TODO:
-        return this.accountNumber;
+        return baseAccount.getAccountNumber();
     }
 
     @Override
     public double getBalance() {
         // TODO:
-        return this.balance;
+        return baseAccount.getBalance();
     }
 
     @Override
     public void withdrawMoney(double money) {
         // TODO:
-        if (money > 0 && money <= this.balance) {
-            this.balance -= money;
-        }
+        baseAccount.withdrawMoney(money);
     }
 
     @Override
     public void depositMoney(double money) {
         // TODO:
-        if (money > 0){
-            this.balance += money;}
+        baseAccount.depositMoney(money);
     }
 
     @Override
     public final String getAccountInformation(){
         // TODO:
-        String accountInformation = "Owner: " + this.owner + ", AccountNumber: " + this.accountNumber + ", Pin: " + this.pin + ", Balance: " + this.balance;
+        String accountInformation = "Owner: " + baseAccount.getOwner() + ", AccountNumber: " + baseAccount.getAccountNumber() +  ", Balance: " + getBalance();
         return accountInformation;
     }
 }
