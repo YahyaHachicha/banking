@@ -32,7 +32,7 @@ public class BankCustomer implements Customer {
 
     public int getCustomerNumber() {
         // TODO:
-        return customerNumber;;
+        return customerNumber;
     }
 
     /**
