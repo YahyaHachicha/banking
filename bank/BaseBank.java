@@ -19,9 +19,9 @@ public class BaseBank implements Bank {
     /** Stores all customers of this bank */
     Customer[] customers;
     /** Stores the current number of accounts */
-    private int accountCount = 0;
+    private int accountCount = accounts.length;
     /** Stores the current number of customers */
-    private int customerCount = 0;
+    private int customerCount = customers.length;
     /** Stores the transfer system between banks */
     public TransactionTransferSystem transferSystem;
     /** Stores transactions */
