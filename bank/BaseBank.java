@@ -38,6 +38,9 @@ public class BaseBank implements Bank {
      */
     public BaseBank(String bankName, int maxCustomers, int maxAccounts) {
         // TODO:
+		this.bankName = bankName;
+        customers = new Customer[maxCustomers];
+        accounts = new BankAccount[maxAccounts];
 
         // create a banking.transaction.TransactionBuffer which stores max. 100 transactions
         this.transactionBuffer = new TransactionBuffer(100);
