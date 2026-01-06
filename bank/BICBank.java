@@ -15,6 +15,9 @@ import java.util.Date;
  */
 public class BICBank implements SWIFTBank {
     // TODO:
+    private String bankName;
+    private int maxAccounts, maxCustomers, BIC;
+    private TransactionTransferSystem tts;
 
     /**
      * Constructor for creation of new banks.
@@ -27,6 +30,9 @@ public class BICBank implements SWIFTBank {
      */
     public BICBank(String bankName, int maxCustomers, int maxAccounts) {
         // TODO:
+        this.bankName = bankName;
+        this.maxCustomers = maxCustomers;
+        this.maxAccounts = maxAccounts;
     }
 
     /**
@@ -36,7 +42,7 @@ public class BICBank implements SWIFTBank {
      */
     public int getBIC() {
         // TODO:
-        return 0;
+        return this.BIC;
     }
 
     /**
@@ -45,6 +51,11 @@ public class BICBank implements SWIFTBank {
      */
     public void setBIC(int bankCode, TransactionTransferSystem tts){
         // TODO:
+        if (tts == null || bankCode < 0 ) {
+            return;
+        }
+        this.BIC = bankCode;
+        this.tts = tts;
     }
 
     @Override
