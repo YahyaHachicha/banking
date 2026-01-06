@@ -55,43 +55,116 @@ public class BaseBank implements Bank {
      */
     @Override
     public String getInstitutionName() {
-        // TODO:
-        return null;
+        return this.bankName;
     }
 
     @Override
-    public int registerCustomer(Customer customer) {
-        // TODO:
-        return 0;
+    public int registerCustomer(Customer paramCustomer) {
+        for (Customer elem : customers) {
+            if (elem == paramCustomer) {
+                return -1;
+            }
+        }
+
+        //neues array erstellen was um einen platz größer ist als customers
+        Customer[] customerstmp = new Customer[customers.length + 1];
+
+        //alle elemente aus customers an die gleiche stelle ins neue array kopieren
+        int counter = 0;
+        for (Customer elem : customers) {
+            customerstmp[counter] = elem;
+            counter += 1;
+        }
+
+        //an den letzten leeren platz den neuen kunden hinzufügen
+        customerstmp[customerstmp.length - 1] = paramCustomer;
+
+        //altes kunden array löschen und um 1 vergrößern
+        customers = new Customer[customerstmp.length];
+
+        //das neue array dem alten zuweisen
+        customers = customerstmp;
+
+        //kundennummer ist der platz im array, damit jede zahl nur einmal pro kunde benutzt wird.
+        return customers[customers.length - 1].getCustomerNumber();
     }
 
     @Override
     public int createCheckingBankAccount(int customerID, int pin) {
-        // TODO:
-        return 0;
+        BankAccount newCheckingAccount = new CheckingAccount(accounts.length, customers[customerID], pin);
+
+        BankAccount[] accountstmp = new BankAccount[accounts.length + 1];
+
+        int counter = 0;
+        for (BankAccount elem : accounts) {
+            accountstmp[counter] = elem;
+            counter += 1;
+        }
+
+        accountstmp[accountstmp.length - 1] = newCheckingAccount;
+
+        accounts = new BankAccount[accountstmp.length];
+
+        accounts = accountstmp;
+
+        return accounts[accounts.length - 1].getAccountNumber();
     }
 
     @Override
     public int createSavingsBankAccount(CheckingAccount checkingAccount, int pin) {
-        // TODO:
-        return 0;
+        BankAccount newSavingsAccount = new SavingsAccount(accounts.length, checkingAccount, pin);
+
+        BankAccount[] accountstmp = new BankAccount[accounts.length + 1];
+
+        int counter = 0;
+        for (BankAccount elem : accounts) {
+            accountstmp[counter] = elem;
+            counter += 1;
+        }
+
+        accountstmp[accountstmp.length - 1] = newSavingsAccount;
+
+        accounts = new BankAccount[accountstmp.length];
+
+        accounts = accountstmp;
+
+        return accounts[accounts.length - 1].getAccountNumber();
     }
 
     @Override
     public double getBalance(int accountNumber) {
-        // TODO:
+        for (BankAccount elem : accounts) {
+            if (elem.getAccountNumber() == accountNumber) {
+                return elem.getBalance();
+            }
+        }
         return 0;
     }
 
     @Override
     public boolean validatePin(int accountNumber, int pin) {
-        // TODO:
+        for (BankAccount elem : accounts) {
+            if (elem.getAccountNumber() == accountNumber) {
+                return elem.validatePin(pin);
+            }
+        }
         return false;
     }
 
     @Override
     public boolean withdraw(int accountNumber, double money) {
-        // TODO:
+        if (money <= 0) {
+            return false;
+        }
+
+        for (BankAccount elem : accounts) {
+            if (elem.getAccountNumber() == accountNumber) {
+                if (money <= elem.getBalance()) {
+                    elem.withdrawMoney(money);
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -103,7 +176,11 @@ public class BaseBank implements Bank {
      */
     @Override
     public BankAccount getBankAccount(int accountNumber) {
-        // TODO:
+        for (BankAccount elem : accounts) {
+            if (accountNumber == elem.getAccountNumber()) {
+                return elem;
+            }
+        }
         return null;
     }
 
@@ -115,8 +192,7 @@ public class BaseBank implements Bank {
      * @return true if the amount of money can be withdrawn, else if not
      */
     boolean canWithdrawal(BankAccount account, double money) {
-        // TODO:
-        return false;
+        return money <= account.getBalance();
     }
 
     @Override
