@@ -43,7 +43,6 @@ public class BankStatementPrinter {
                     System.out.println();
                     System.out.println("Wrong pin. Try again.");
                     System.out.println("Tries left: " + triesLeft);
-                    System.out.println("Tries left: " + triesLeft);
                     System.out.print("Please enter your pin: ");
                 }
             }
