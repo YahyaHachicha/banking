@@ -60,6 +60,10 @@ public class BaseBank implements Bank {
 
     @Override
     public int registerCustomer(Customer paramCustomer) {
+		if (paramCustomer == null) {
+			return -1;
+		}
+		
         for (Customer elem : customers) {
             if (elem == paramCustomer) {
                 return -1;
