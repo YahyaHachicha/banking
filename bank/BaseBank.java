@@ -19,9 +19,9 @@ public class BaseBank implements Bank {
     /** Stores all customers of this bank */
     Customer[] customers;
     /** Stores the current number of accounts */
-    private int accountCount = accounts.length;
+    private int accountCount = 0;
     /** Stores the current number of customers */
-    private int customerCount = customers.length;
+    private int customerCount = 0;
     /** Stores the transfer system between banks */
     public TransactionTransferSystem transferSystem;
     /** Stores transactions */
@@ -72,70 +72,42 @@ public class BaseBank implements Bank {
                 return -1;
             }
         }
+		
+		if (customerCount >= customers.length) {
+			return -1;
+		}
+		
+		customers[customerCount] = paramCustomer;
+		customers[customerCount].setCustomerNumber(customerCount);
+		customerCount += 1;
 
-        //neues array erstellen was um einen platz größer ist als customers
-        Customer[] customerstmp = new Customer[customers.length + 1];
-
-        //alle elemente aus customers an die gleiche stelle ins neue array kopieren
-        int counter = 0;
-        for (Customer elem : customers) {
-            customerstmp[counter] = elem;
-            counter += 1;
-        }
-
-        //an den letzten leeren platz den neuen kunden hinzufügen
-        customerstmp[customerstmp.length - 1] = paramCustomer;
-
-        //altes kunden array löschen und um 1 vergrößern
-        customers = new Customer[customerstmp.length];
-
-        //das neue array dem alten zuweisen
-        customers = customerstmp;
-
-        //kundennummer ist der platz im array, damit jede zahl nur einmal pro kunde benutzt wird.
-        return customers[customers.length - 1].getCustomerNumber();
+        return customers[customerCount - 1].getCustomerNumber;
     }
 
     @Override
     public int createCheckingBankAccount(int customerID, int pin) {
-        BankAccount newCheckingAccount = new CheckingAccount(accounts.length, customers[customerID], pin);
+        BankAccount newCheckingAccount = new CheckingAccount(accountCount, customers[customerID], pin);
 
-        BankAccount[] accountstmp = new BankAccount[accounts.length + 1];
+        accounts[accountCount] = newCheckingAccount;
+		accountCount += 1;
 
-        int counter = 0;
-        for (BankAccount elem : accounts) {
-            accountstmp[counter] = elem;
-            counter += 1;
-        }
-
-        accountstmp[accountstmp.length - 1] = newCheckingAccount;
-
-        accounts = new BankAccount[accountstmp.length];
-
-        accounts = accountstmp;
-
-        return accounts[accounts.length - 1].getAccountNumber();
+        return accounts[accountCount - 1].getAccountNumber();
     }
 
     @Override
     public int createSavingsBankAccount(CheckingAccount checkingAccount, int pin) {
-        BankAccount newSavingsAccount = new SavingsAccount(accounts.length, checkingAccount, pin);
+		if (checkingAccount == null) {
+			return -1
+		}
+		
+        BankAccount newSavingsAccount = new SavingsAccount(accountCount, checkingAccount, pin);
+		
+		accounts[accountCount] = newSavingsAccount;
+		accountCount += 1;
 
-        BankAccount[] accountstmp = new BankAccount[accounts.length + 1];
+        return accounts[accountCount - 1].getAccountNumber();
 
-        int counter = 0;
-        for (BankAccount elem : accounts) {
-            accountstmp[counter] = elem;
-            counter += 1;
-        }
-
-        accountstmp[accountstmp.length - 1] = newSavingsAccount;
-
-        accounts = new BankAccount[accountstmp.length];
-
-        accounts = accountstmp;
-
-        return accounts[accounts.length - 1].getAccountNumber();
+        
     }
 
     @Override
