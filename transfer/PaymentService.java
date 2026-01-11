@@ -1,5 +1,7 @@
 package banking.transfer;
 
+import banking.account.BankCustomer;
+import banking.account.Customer;
 import banking.bank.*;
 
 /**
@@ -15,69 +17,63 @@ public class PaymentService implements TransactionTransferSystem {
     public final static String KlarnaName = "Klarna";
     public final static String WesternUnionName = "WesternUnion";
 
-    public static final PaymentService GOOGLE_PAY
-            = new PaymentService(GooglePayBankName);
+    public static final PaymentService GOOGLE_PAY = new PaymentService(GooglePayBankName);
 
-    public static final PaymentService APPLE_PAY
-            = new PaymentService(ApplePayBankName);
+    public static final PaymentService APPLE_PAY = new PaymentService(ApplePayBankName);
 
-    public static final PaymentService PAYPAL
-            = new PaymentService(PayPalBankName);
+    public static final PaymentService PAYPAL = new PaymentService(PayPalBankName);
 
-    public static final PaymentService WERO
-            = new PaymentService(WeroBankName);
+    public static final PaymentService WERO = new PaymentService(WeroBankName);
 
-    public static final PaymentService MONEY_GRAM
-            = new PaymentService(MoneyGramBankName);
+    public static final PaymentService MONEY_GRAM = new PaymentService(MoneyGramBankName);
 
-    public static final PaymentService KLARNA
-            = new PaymentService(KlarnaName);
+    public static final PaymentService KLARNA = new PaymentService(KlarnaName);
 
-    public static final PaymentService WESTERN_UNION
-            = new PaymentService(WesternUnionName);
+    public static final PaymentService WESTERN_UNION = new PaymentService(WesternUnionName);
 
     // TODO:
-    private String serviceName;
+
+    String serviceName;
 
     private PaymentService(String serviceName) {
-        // TODO:
         this.serviceName = serviceName;
     }
 
     @Override
     public boolean submitTransaction(Transaction transaction) {
-        // TODO:
-        if (transaction == null)
+        if (transaction == null || transaction.getFinishDate() != null)
             return false;
-        // erzeugen ein temporäres BICBank
-        BICBank tempBICBank = new BICBank(this.serviceName + "_TEMP", 0, 0);
-        tempBICBank.setBIC(0, SWIFTSystem.SWIFT_INSTANCE);
-        return SWIFTSystem.SWIFT_INSTANCE.submitTransaction(transaction);
+
+        if (transaction.getFromBank() == null) {
+            SWIFTBank banktmp = new BICBank(serviceName, 1, 1);
+            Customer customertmp = new BankCustomer(serviceName, serviceName, null, null);
+            banktmp.registerCustomer(customertmp);
+            banktmp.getBankAccount(banktmp.createCheckingBankAccount(customertmp.getCustomerNumber(), 9999)).depositMoney(transaction.getAmount());
+            SWIFTSystem.SWIFT_INSTANCE.submitTransaction(new Transaction(0, serviceName, transaction.getToAccountNumber(), transaction.getRecipientLastName(), transaction.getAmount(), banktmp, transaction.getToBank()));
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean register(SWIFTBank executor) {
-        // TODO:
         return SWIFTSystem.SWIFT_INSTANCE.register(executor);
     }
 
     @Override
     public SWIFTBank[] getAll() {
-        // TODO:
         return SWIFTSystem.SWIFT_INSTANCE.getAll();
     }
 
     @Override
     public SWIFTBank getByBIC(int bic) {
-        // TODO:
         return SWIFTSystem.SWIFT_INSTANCE.getByBIC(bic);
     }
 
     @Override
     public SWIFTBank getByName(String bankName) {
-        // TODO:
-        if (this.serviceName.equalsIgnoreCase(bankName)){
-            return null;
+        if (bankName.equals(this.serviceName)) {
+            return new BICBank(serviceName, 1, 1);
         }
         return SWIFTSystem.SWIFT_INSTANCE.getByName(bankName);
     }

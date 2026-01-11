@@ -9,8 +9,8 @@ import banking.bank.Transaction;
 public class SWIFTSystem implements TransactionTransferSystem {
     private static final int SWIFT_BANKS_COUNT = 100;
     public static final TransactionTransferSystem SWIFT_INSTANCE = new SWIFTSystem(SWIFT_BANKS_COUNT);
-    private int maxBanks, bankCount;
-    SWIFTBank[] banks = new SWIFTBank[maxBanks];
+    private int maxBanks, bankCount = 0;
+    SWIFTBank[] banks;
 
     // TODO:
 
@@ -22,6 +22,7 @@ public class SWIFTSystem implements TransactionTransferSystem {
      */
     private SWIFTSystem(int size){
         this.maxBanks = size;
+        banks = new SWIFTBank[maxBanks];
     }
 
     @Override
@@ -30,12 +31,15 @@ public class SWIFTSystem implements TransactionTransferSystem {
         if (tx.getFromBank() instanceof SWIFTBank) {
             for (SWIFTBank banktmp : banks) {
                 if (tx.getFromBank() == banktmp) {
+                    tx.getFromBank().getBankAccount(tx.getFromAccountNumber()).withdrawMoney(tx.getAmount());
+                    tx.getToBank().getBankAccount(tx.getToAccountNumber()).depositMoney(tx.getAmount());
                     return true;
                 }
             }
             return false;
         }
-        return true;
+        return false;
+
     }
 
     @Override
@@ -55,7 +59,7 @@ public class SWIFTSystem implements TransactionTransferSystem {
         }
 
         banks[bankCount] = pSwiftBank;
-        banks[bankCount].setBIC(bankCount, SWIFT_INSTANCE);
+        banks[bankCount].setBIC(bankCount, SWIFTSystem.SWIFT_INSTANCE);
         bankCount += 1;
         return true;
     }
