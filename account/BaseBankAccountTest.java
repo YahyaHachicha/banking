@@ -2,11 +2,13 @@ package banking.account;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BaseBankAccountTest {
 
-    Customer test2 = new BankCustomer("Tom", "Zimmermann", "05.03.1997", "Ligusterweg 4");
+    Customer test2 = new BankCustomer("Tom", "Zimmermann", new Date(1997, 3, 5), "Ligusterweg 4");
     BaseBankAccount test1 = new BaseBankAccount(12345, test2, 1544);
     @Test
     void validatePin() {

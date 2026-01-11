@@ -2,12 +2,14 @@ package banking.account;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
+
 import static banking.account.BankAccount.AccountType.Checking;
 import static banking.account.BankAccount.AccountType.Savings;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SavingsAccountTest {
-    Customer test2 = new BankCustomer("Tom", "Zimmermann", "05.03.1997", "Ligusterweg 4");
+    Customer test2 = new BankCustomer("Tom", "Zimmermann", new Date(1997, 3, 5), "Ligusterweg 4");
     CheckingAccount test1 = new CheckingAccount(12345, test2, 1544);
     SavingsAccount test3 = new SavingsAccount(54321, test1, 3567);
 
