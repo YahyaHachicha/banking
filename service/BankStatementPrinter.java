@@ -28,7 +28,7 @@ public class BankStatementPrinter {
 
             System.out.println("**********************************************************");
             System.out.print("Account found. \n Please enter your pin: ");
-            for (int tries = 4; tries > 0; tries--) {
+            for (int tries = 4; tries > 1; tries--) {
                 if (bank.getBankAccount(accountNumber).validatePin(scanner2.nextInt())) {
                     System.out.println();
                     if (bank.getBankAccount(accountNumber).accessibleFromTerminal()) {
@@ -46,9 +46,12 @@ public class BankStatementPrinter {
                     System.out.print("Please enter your pin: ");
                 }
             }
+            System.out.println();
             System.out.println("No tries left. Process aborted.");
             return false;
         }
         return false;
     }
 }
+
+
