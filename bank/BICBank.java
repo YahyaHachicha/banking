@@ -15,10 +15,9 @@ import java.util.Date;
  */
 public class BICBank implements SWIFTBank {
     // TODO:
-    private String bankName, receiverBank, senderBank;
-    private int maxAccounts, maxCustomers, BIC, receiverBIC, senderBIC;
+    private String bankName;
+    private int maxAccounts, maxCustomers, BIC;
     private TransactionTransferSystem tts;
-    private Date endDate;
     private BaseBank baseBank;
     private BankAccount bankAccount;
 
@@ -64,7 +63,57 @@ public class BICBank implements SWIFTBank {
     @Override
     public boolean executeTransaction(Transaction transaction) {
         // TODO:
-        return false;
+                // 1. Null- & Enddatum-Check
+        if (transaction == null || transaction.getFinishDate() != null)
+            return false;
+
+        BankAccount sender = getBankAccount(transaction.getFromAccountNumber());
+        BankAccount receiver = getBankAccount(transaction.getToAccountNumber());
+
+        // 2. Interne Überweisung, wenn beide Konten gleich sind
+        if (sender != null && receiver != null) {
+
+            boolean success = transferWithinBank(transaction.getFromAccountNumber(), transaction.getRecipientLastName(), transaction.getToAccountNumber(), transaction.getAmount());
+
+            if (success) {
+                transaction.setFinishDate(transaction.getStartDate());
+                baseBank.getTransactionHistory(transaction.getToAccountNumber());
+            }
+            return success;
+        }
+
+        // 3. Externe Überweisung
+
+        // Wir müssen Senderkonto überprüfen
+        if (sender == null)
+            return false;
+
+        // Sparkonto darf nicht senden
+        if (sender.getAccountType() == BankAccount.AccountType.Savings)
+            return false;
+
+        // Deckung prüfen, d.h., wenn der gesendete Beitrag größer als der Balance im Konto ist, dann ist die Ueberweisung unmöglich
+        if (sender.getBalance() < transaction.getAmount())
+            return false;
+
+        // Geld abheben
+        if (!withdraw(transaction.getFromAccountNumber(),
+                transaction.getAmount()))
+            return false;
+
+        // Über SWIFT senden
+        boolean success = tts.submitTransaction(transaction);
+
+        if (!success) {
+            deposit(transaction.getFromAccountNumber(), transaction.getAmount());
+            return false;
+        }
+
+        // Erfolg
+        transaction.setFinishDate(transaction.getStartDate());
+        baseBank.getTransactionHistory(transaction.getToAccountNumber());
+        return true;
+    }
     }
 
     @Override
