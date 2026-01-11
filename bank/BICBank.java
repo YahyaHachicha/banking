@@ -66,8 +66,8 @@ public class BICBank implements SWIFTBank {
         if (transaction == null || transaction.getFinishDate() != null)
             return false;
 
-        BankAccount sender = getBankAccount(transaction.getFromAccountNumber());
-        BankAccount receiver = getBankAccount(transaction.getToAccountNumber());
+        BankAccount sender = transaction.getToBank().getBankAccount(transaction.getFromAccountNumber());
+        BankAccount receiver = transaction.getToBank().getBankAccount(transaction.getToAccountNumber());
 
         // 2. Interne Überweisung, wenn beide Konten gleich sind
         if (sender != null && receiver != null) {
