@@ -56,7 +56,6 @@ public class BICBank implements SWIFTBank {
         }
         this.BIC = bankCode;
         this.tts = tts;
-		tts.register(this);
     }
 
     @Override
@@ -113,12 +112,11 @@ public class BICBank implements SWIFTBank {
         baseBank.getTransactionHistory(transaction.getToAccountNumber());
         return true;
     }
-    }
 
     @Override
     public final String toString() {
         // TODO:
-        String info = "BankName: " + baseBank.getInstitutionName() +"/n" + "BIC: " + baseBank.getBIC() + "/n " + "Customers: /n";
+        String info = "BankName: " + baseBank.getInstitutionName() +"/n" + "BIC: " + getBIC() + "/n " + "Customers: /n";
         for (Customer customer : baseBank.customers) {
             if (customer != null) {
                 info = " " + info + customer + "/n";
