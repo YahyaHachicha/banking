@@ -1,9 +1,6 @@
 package banking.bank;
 
-import banking.account.Customer;
-import banking.account.BankAccount;
-import banking.account.CheckingAccount;
-import banking.account.SavingsAccount;
+import banking.account.*;
 import banking.transfer.TransactionTransferSystem;
 
 /**
@@ -78,14 +75,22 @@ public class BaseBank implements Bank {
 		}
 		
 		customers[customerCount] = paramCustomer;
-		customers[customerCount].setCustomerNumber(customerCount);
+        BankCustomer customertmp = (BankCustomer) customers[customerCount];
+        customertmp.setCustomerNumber(customerCount);
+        Customer customertmp2 = (Customer) customertmp;
+        customers[customerCount] = customertmp2;
 		customerCount += 1;
 
-        return customers[customerCount - 1].getCustomerNumber;
+        return customers[customerCount - 1].getCustomerNumber();
     }
 
     @Override
     public int createCheckingBankAccount(int customerID, int pin) {
+		
+		if (accountCount >= accounts.length) {
+			return -1;
+		}
+		
         BankAccount newCheckingAccount = new CheckingAccount(accountCount, customers[customerID], pin);
 
         accounts[accountCount] = newCheckingAccount;
@@ -97,7 +102,11 @@ public class BaseBank implements Bank {
     @Override
     public int createSavingsBankAccount(CheckingAccount checkingAccount, int pin) {
 		if (checkingAccount == null) {
-			return -1
+			return -1;
+		}
+		
+		if (accountCount >= accounts.length) {
+			return -1;
 		}
 		
         BankAccount newSavingsAccount = new SavingsAccount(accountCount, checkingAccount, pin);
