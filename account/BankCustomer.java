@@ -1,13 +1,16 @@
 package banking.account;
 
+import java.util.Date;
+
 /**
  * This class implements a simple bank customer.
  *
  */
 public class BankCustomer implements Customer {
     // TODO:
-    private String firstname, lastname, birthday, address;
+    private String firstname, lastname, address;
     private int  customerNumber;
+    private Date birthday;
 
     /**
      * Constructor to create a finance.banking.account.BankCustomer.
@@ -17,7 +20,7 @@ public class BankCustomer implements Customer {
      * @param birthday       the birthday
      * @param address        the address
      */
-    public BankCustomer(String firstname, String lastname, String birthday, String address) {
+    public BankCustomer(String firstname, String lastname, Date birthday, String address) {
         // TODO:
         this.firstname = firstname;
         this.lastname = lastname;
@@ -50,7 +53,7 @@ public class BankCustomer implements Customer {
      *
      * @return the date of birth
      */
-    public String getBirthday() {
+    public Date getBirthday() {
         // TODO:
         return this.birthday;
     }
@@ -100,7 +103,7 @@ public class BankCustomer implements Customer {
      *
      * @param birthday the new birthday
      */
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         // TODO:
         this.birthday = birthday;
     }
