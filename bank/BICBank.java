@@ -56,6 +56,7 @@ public class BICBank implements SWIFTBank {
         }
         this.BIC = bankCode;
         this.tts = tts;
+        tts.register(this);
     }
 
     @Override
