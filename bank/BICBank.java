@@ -15,9 +15,12 @@ import java.util.Date;
  */
 public class BICBank implements SWIFTBank {
     // TODO:
-    private String bankName;
-    private int maxAccounts, maxCustomers, BIC;
+    private String bankName, receiverBank, senderBank;
+    private int maxAccounts, maxCustomers, BIC, receiverBIC, senderBIC;
     private TransactionTransferSystem tts;
+    private Date endDate;
+    private BaseBank baseBank;
+    private BankAccount bankAccount;
 
     /**
      * Constructor for creation of new banks.
@@ -67,60 +70,83 @@ public class BICBank implements SWIFTBank {
     @Override
     public final String toString() {
         // TODO:
-        return null;
+        String info = "BankName: " + getInstitutionName() +"/n" + "BIC: " + getBIC() + "/n " + "Customers: /n";
+        for (Customer customer : baseBank.customers) {
+            if (customer != null) {
+                info = " " + info + customer + "/n";
+            }
+        }
+        info = info + "Accounts: /n";
+        for (BankAccount account : baseBank.accounts) {
+            if (account != null) {
+                info = " " + info + account + "/n";
+            }
+        }
+
+        return info;
     }
 
     @Override
     public String getInstitutionName() {
         // TODO:
-        return null;
+        return this.bankName;
     }
 
     @Override
     public int registerCustomer(Customer customer) {
         // TODO:
-        return 0;
+        return this.baseBank.registerCustomer(customer);
     }
 
     @Override
     public int createCheckingBankAccount(int customerID, int pin) {
         // TODO:
-        return 0;
+        return this.baseBank.createCheckingBankAccount(customerID, pin);
     }
 
     @Override
     public int createSavingsBankAccount(CheckingAccount checkingAccount, int pin) {
         // TODO:
-        return 0;
+        return this.baseBank.createSavingsBankAccount(checkingAccount, pin);
     }
 
     @Override
     public BankAccount getBankAccount(int accountNumber) {
         // TODO:
-        return null;
+        return this.baseBank.getBankAccount(accountNumber);
     }
 
     @Override
     public double getBalance(int accountNumber) {
         // TODO:
-        return 0;
+        return this.bankAccount.getBalance();
     }
 
     @Override
     public boolean validatePin(int accountNumber, int pin) {
         // TODO:
-        return false;
+        return this.baseBank.validatePin(accountNumber, pin);
     }
 
     @Override
     public Transaction[] getTransactionHistory(int accountNumber) {
         // TODO:
+        Transaction[] transactions = new Transaction[this.maxAccounts];
+        int index = 0;
+        while (index < this.maxAccounts) {
+            if (executeTransaction(transactions[index])) {
+                index ++;
+            }
+        }
+        if (index == this.maxAccounts) {
+            return transactions;
+        }
         return null;
     }
 
     @Override
     public boolean withdraw(int accountNumber, double money) {
         // TODO:
-        return false;
+        return this.baseBank.withdraw(accountNumber,  money);
     }
 }
