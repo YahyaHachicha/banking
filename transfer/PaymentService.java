@@ -37,9 +37,11 @@ public class PaymentService implements TransactionTransferSystem {
             = new PaymentService(WesternUnionName);
 
     // TODO:
+    private String serviceName;
 
     private PaymentService(String serviceName) {
         // TODO:
+        this.serviceName = serviceName;
     }
 
     @Override
@@ -51,24 +53,27 @@ public class PaymentService implements TransactionTransferSystem {
     @Override
     public boolean register(SWIFTBank executor) {
         // TODO:
-        return false;
+        return SWIFTSystem.SWIFT_INSTANCE.register(executor);
     }
 
     @Override
     public SWIFTBank[] getAll() {
         // TODO:
-        return null;
+        return SWIFTSystem.SWIFT_INSTANCE.getAll();
     }
 
     @Override
     public SWIFTBank getByBIC(int bic) {
         // TODO:
-        return null;
+        return SWIFTSystem.SWIFT_INSTANCE.getByBIC(bic);
     }
 
     @Override
     public SWIFTBank getByName(String bankName) {
         // TODO:
-        return null;
+        if (this.serviceName.equalsIgnoreCase(bankName)){
+            return null;
+        }
+        return SWIFTSystem.SWIFT_INSTANCE.getByName(bankName);
     }
 }
