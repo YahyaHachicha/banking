@@ -15,8 +15,7 @@ import java.util.Date;
  */
 public class BICBank implements SWIFTBank {
     // TODO:
-    private String bankName;
-    private int maxAccounts, maxCustomers, BIC;
+    private int BIC;
     private TransactionTransferSystem tts;
     private BaseBank baseBank;
     private BankAccount bankAccount;
@@ -31,10 +30,9 @@ public class BICBank implements SWIFTBank {
      * @param maxAccounts  the max. number of accounts
      */
     public BICBank(String bankName, int maxCustomers, int maxAccounts) {
-        // TODO:
-        this.bankName = bankName;
-        this.maxCustomers = maxCustomers;
-        this.maxAccounts = maxAccounts;
+		
+        this.baseBank = new BaseBank(bankName, maxCustomers, maxAccounts);
+		
     }
 
     /**
@@ -119,7 +117,7 @@ public class BICBank implements SWIFTBank {
     @Override
     public final String toString() {
         // TODO:
-        String info = "BankName: " + getInstitutionName() +"/n" + "BIC: " + getBIC() + "/n " + "Customers: /n";
+        String info = "BankName: " + baseBank.getInstitutionName() +"/n" + "BIC: " + baseBank.getBIC() + "/n " + "Customers: /n";
         for (Customer customer : baseBank.customers) {
             if (customer != null) {
                 info = " " + info + customer + "/n";
@@ -138,7 +136,7 @@ public class BICBank implements SWIFTBank {
     @Override
     public String getInstitutionName() {
         // TODO:
-        return this.bankName;
+        return this.baseBank.getInstitutionName();
     }
 
     @Override
@@ -180,14 +178,14 @@ public class BICBank implements SWIFTBank {
     @Override
     public Transaction[] getTransactionHistory(int accountNumber) {
         // TODO:
-        Transaction[] transactions = new Transaction[this.maxAccounts];
+        Transaction[] transactions = new Transaction[this.baseBank.accounts.length];
         int index = 0;
-        while (index < this.maxAccounts) {
+        while (index < this.baseBank.accounts.length) {
             if (executeTransaction(transactions[index])) {
                 index ++;
             }
         }
-        if (index == this.maxAccounts) {
+        if (index == this.baseBank.accounts.length) {
             return transactions;
         }
         return null;
@@ -196,6 +194,6 @@ public class BICBank implements SWIFTBank {
     @Override
     public boolean withdraw(int accountNumber, double money) {
         // TODO:
-        return this.baseBank.withdraw(accountNumber,  money);
+        return this.baseBank.withdraw(accountNumber, money);
     }
 }
