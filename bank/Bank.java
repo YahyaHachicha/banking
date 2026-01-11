@@ -155,11 +155,7 @@ public interface Bank {
      * @param money - the amount of money to transfer.
      * @return -  boolean: true if transfer was successful, false otherwise.
      */
-    default boolean transferWithinBank(int fromAccountNumber,
-                                       String toCustomerName,
-                                       int toAccountNumber,
-                                       double money)
-    {
+    default boolean transferWithinBank(int fromAccountNumber, String toCustomerName, int toAccountNumber, double money) {
         if(!this.isValidAccountNumber(fromAccountNumber) ||
                 !this.isValidAccountNumber(toAccountNumber))
             return false;

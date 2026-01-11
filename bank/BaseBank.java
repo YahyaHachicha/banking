@@ -121,6 +121,9 @@ public class BaseBank implements Bank {
 
     @Override
     public double getBalance(int accountNumber) {
+        if (!this.isValidAccountNumber(accountNumber)) {
+            return 0;
+        }
         for (BankAccount elem : accounts) {
             if (elem.getAccountNumber() == accountNumber) {
                 return elem.getBalance();
@@ -131,6 +134,10 @@ public class BaseBank implements Bank {
 
     @Override
     public boolean validatePin(int accountNumber, int pin) {
+        if (!this.isValidAccountNumber(accountNumber)) {
+            return false;
+        }
+
         for (BankAccount elem : accounts) {
             if (elem.getAccountNumber() == accountNumber) {
                 return elem.validatePin(pin);
@@ -141,14 +148,18 @@ public class BaseBank implements Bank {
 
     @Override
     public boolean withdraw(int accountNumber, double money) {
+        if (!this.isValidAccountNumber(accountNumber)) {
+            return false;
+        }
+
         if (money <= 0) {
             return false;
         }
 
-        for (BankAccount elem : accounts) {
-            if (elem.getAccountNumber() == accountNumber) {
-                if (money <= elem.getBalance()) {
-                    elem.withdrawMoney(money);
+        for (int index = 0; index < accountCount; index++) {
+            if (accounts[index].getAccountNumber() == accountNumber) {
+                if (money <= accounts[index].getBalance()) {
+                    accounts[index].withdrawMoney(money);
                     return true;
                 }
             }
@@ -164,6 +175,7 @@ public class BaseBank implements Bank {
      */
     @Override
     public BankAccount getBankAccount(int accountNumber) {
+
         for (BankAccount elem : accounts) {
             if (accountNumber == elem.getAccountNumber()) {
                 return elem;
@@ -199,5 +211,9 @@ public class BaseBank implements Bank {
         Transaction[] slice = new Transaction[index];
         System.arraycopy(accountTransactions, 0, slice, 0, index);
         return slice;
+    }
+
+    public void addTransaction(Transaction tx) {
+        this.transactionBuffer.addTransaction(tx);
     }
 }

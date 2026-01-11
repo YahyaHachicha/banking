@@ -18,7 +18,6 @@ public class BICBank implements SWIFTBank {
     private int BIC;
     private TransactionTransferSystem tts;
     private BaseBank baseBank;
-    private BankAccount bankAccount;
 
     /**
      * Constructor for creation of new banks.
@@ -56,7 +55,6 @@ public class BICBank implements SWIFTBank {
         }
         this.BIC = bankCode;
         this.tts = tts;
-        tts.register(this);
     }
 
     @Override
@@ -66,17 +64,17 @@ public class BICBank implements SWIFTBank {
         if (transaction == null || transaction.getFinishDate() != null)
             return false;
 
-        BankAccount sender = transaction.getToBank().getBankAccount(transaction.getFromAccountNumber());
+        BankAccount sender = transaction.getFromBank().getBankAccount(transaction.getFromAccountNumber());
         BankAccount receiver = transaction.getToBank().getBankAccount(transaction.getToAccountNumber());
 
         // 2. Interne Überweisung, wenn beide Konten gleich sind
-        if (sender != null && receiver != null) {
+        if (transaction.getFromBank() == transaction.getToBank()) {
 
             boolean success = transferWithinBank(transaction.getFromAccountNumber(), transaction.getRecipientLastName(), transaction.getToAccountNumber(), transaction.getAmount());
 
             if (success) {
-                transaction.setFinishDate(transaction.getStartDate());
-                baseBank.getTransactionHistory(transaction.getToAccountNumber());
+                transaction.setFinishDate(new Date());
+                baseBank.addTransaction(transaction);
             }
             return success;
         }
@@ -84,7 +82,16 @@ public class BICBank implements SWIFTBank {
         // 3. Externe Überweisung
 
         // Wir müssen Senderkonto überprüfen
-        if (sender == null)
+        if (sender == null || transaction.getSenderLastName() == null)
+            return false;
+
+        if (receiver == null || transaction.getRecipientLastName() == null)
+            return false;
+
+        if (!transaction.getRecipientLastName().equals(transaction.getToBank().getBankAccount(transaction.getToAccountNumber()).getOwner().getLastname()))
+            return false;
+
+        if (sender.getBalance() < transaction.getAmount())
             return false;
 
         // Sparkonto darf nicht senden
@@ -95,23 +102,15 @@ public class BICBank implements SWIFTBank {
         if (sender.getBalance() < transaction.getAmount())
             return false;
 
-        // Geld abheben
-        if (!withdraw(transaction.getFromAccountNumber(),
-                transaction.getAmount()))
-            return false;
-
         // Über SWIFT senden
         boolean success = tts.submitTransaction(transaction);
 
-        if (!success) {
-            deposit(transaction.getFromAccountNumber(), transaction.getAmount());
-            return false;
+        if (success) {
+            // Erfolg
+            transaction.setFinishDate(new Date());
+            baseBank.addTransaction(transaction);
         }
-
-        // Erfolg
-        transaction.setFinishDate(transaction.getStartDate());
-        baseBank.getTransactionHistory(transaction.getToAccountNumber());
-        return true;
+        return success;
     }
 
     @Override
@@ -166,7 +165,7 @@ public class BICBank implements SWIFTBank {
     @Override
     public double getBalance(int accountNumber) {
         // TODO:
-        return this.bankAccount.getBalance();
+        return this.baseBank.getBankAccount(accountNumber).getBalance();
     }
 
     @Override
@@ -177,18 +176,7 @@ public class BICBank implements SWIFTBank {
 
     @Override
     public Transaction[] getTransactionHistory(int accountNumber) {
-        // TODO:
-        Transaction[] transactions = new Transaction[this.baseBank.accounts.length];
-        int index = 0;
-        while (index < this.baseBank.accounts.length) {
-            if (executeTransaction(transactions[index])) {
-                index ++;
-            }
-        }
-        if (index == this.baseBank.accounts.length) {
-            return transactions;
-        }
-        return null;
+        return baseBank.getTransactionHistory(accountNumber);
     }
 
     @Override
