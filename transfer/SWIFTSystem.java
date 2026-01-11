@@ -8,8 +8,9 @@ import banking.bank.Transaction;
  */
 public class SWIFTSystem implements TransactionTransferSystem {
     private static final int SWIFT_BANKS_COUNT = 100;
-    public static final TransactionTransferSystem SWIFT_INSTANCE
-            = new SWIFTSystem(SWIFT_BANKS_COUNT);
+    public static final TransactionTransferSystem SWIFT_INSTANCE = new SWIFTSystem(SWIFT_BANKS_COUNT);
+    private int maxBanks, bankCount;
+    SWIFTBank[] banks = new SWIFTBank[maxBanks];
 
     // TODO:
 
@@ -20,36 +21,62 @@ public class SWIFTSystem implements TransactionTransferSystem {
      * @param size the maximum number of executors (banks) that can be registered
      */
     private SWIFTSystem(int size){
-        // TODO:
+        this.maxBanks = size;
     }
 
     @Override
     public boolean submitTransaction(Transaction tx) {
-        // TODO:
-        return false;
+
+        if (tx.getFromBank() instanceof SWIFTBank) {
+            for (SWIFTBank banktmp : banks) {
+                if (tx.getFromBank() == banktmp) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean register(SWIFTBank pSwiftBank) {
-        // TODO:
-        return false;
+        if (pSwiftBank == null) {
+            return false;
+        }
+
+        if (bankCount >= banks.length) {
+            return false;
+        }
+
+        for (SWIFTBank banktmp : banks) {
+            if (banktmp == pSwiftBank) {
+                return false;
+            }
+        }
+
+        banks[bankCount] = pSwiftBank;
+        banks[bankCount].setBIC(bankCount, SWIFT_INSTANCE);
+        bankCount += 1;
+        return true;
     }
 
     @Override
     public SWIFTBank getByBIC(int bic) {
-        // TODO:
-        return null;
+        return banks[bic];
     }
 
     @Override
     public SWIFTBank getByName(String bankName) {
-        // TODO:
+        for (SWIFTBank banktmp : banks) {
+            if (banktmp.getInstitutionName().equals(bankName)) {
+                return banktmp;
+            }
+        }
         return null;
     }
 
     @Override
     public SWIFTBank[] getAll() {
-        // TODO:
-        return null;
+       return banks;
     }
 }
