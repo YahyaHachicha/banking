@@ -47,7 +47,12 @@ public class PaymentService implements TransactionTransferSystem {
     @Override
     public boolean submitTransaction(Transaction transaction) {
         // TODO:
-        return false;
+        if (transaction == null)
+            return false;
+        // erzeugen ein temporäres BICBank
+        BICBank tempBICBank = new BICBank(this.serviceName + "_TEMP", 0, 0);
+        tempBICBank.setBIC(0, SWIFTSystem.SWIFT_INSTANCE);
+        return SWIFTSystem.SWIFT_INSTANCE.submitTransaction(transaction);
     }
 
     @Override
