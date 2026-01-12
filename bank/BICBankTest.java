@@ -15,9 +15,9 @@ class BICBankTest {
     SWIFTBank bank2 = new BICBank("ING-DiBa", 20, 50);
     SWIFTBank bank3 = new BICBank("Sparkasse", 25, 100);
 
-    BankCustomer customer1 = new BankCustomer("Tom", "Zimmermann", new Date(1997, 3, 5), "Ligusterweg 4");
-    BankCustomer customer2 = new BankCustomer("Tommy", "Mustermann", new Date(2000, 7, 12), "Adenauerweg 18");
-    BankCustomer customer3 = new BankCustomer("Max", "Müller", new Date(1968, 8, 24), "Feldweg 104");
+    BankCustomer customer1 = new BankCustomer("Tom", "Zimmermann", "1997.3.5)", "Ligusterweg 4");
+    BankCustomer customer2 = new BankCustomer("Tommy", "Mustermann", "2000.7.12", "Adenauerweg 18");
+    BankCustomer customer3 = new BankCustomer("Max", "Müller", "1968.8.24", "Feldweg 104");
 
     @Test
     void executeTransactionCorrectSwift() {
@@ -113,6 +113,7 @@ class BICBankTest {
         assertNotEquals(2000.0, bank2.getBankAccount(0).getBalance());
     }
 
+    @Test
     void executeTransactionNotEnoughMoney() {
         bank1.registerCustomer(customer1);
         bank1.createCheckingBankAccount(customer1.getCustomerNumber(), 43210);

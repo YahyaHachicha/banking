@@ -176,9 +176,9 @@ public class BaseBank implements Bank {
     @Override
     public BankAccount getBankAccount(int accountNumber) {
 
-        for (BankAccount elem : accounts) {
-            if (accountNumber == elem.getAccountNumber()) {
-                return elem;
+        for (int index = 0; index < accountCount; index++) {
+            if (accountNumber == accounts[index].getAccountNumber()) {
+                return accounts[index];
             }
         }
         return null;
