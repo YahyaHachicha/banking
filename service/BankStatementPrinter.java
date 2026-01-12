@@ -21,7 +21,7 @@ public class BankStatementPrinter {
         System.out.println("**********************************************************");
         System.out.println("Welcome to " + bank.getInstitutionName());
         System.out.println("**********************************************************");
-        System.out.println("Please enter your account number:");
+        System.out.print("Please enter your account number: ");
 
         return printStatementOf(bank, scanner1.nextInt());
     }
@@ -37,8 +37,8 @@ public class BankStatementPrinter {
             Scanner scanner2 = new Scanner(System.in);
 
             System.out.println("**********************************************************");
-            System.out.print("Account found. \n Please enter your pin: ");
-            for (int tries = 4; tries > 1; tries--) {
+            System.out.print("Account found.\nPlease enter your pin: ");
+            for (int tries = 4; tries > 0; tries--) {
                 if (bank.getBankAccount(accountNumber).validatePin(scanner2.nextInt())) {
                     System.out.println();
                     if (bank.getBankAccount(accountNumber).accessibleFromTerminal()) {
@@ -49,11 +49,14 @@ public class BankStatementPrinter {
                         return false;
                     }
                 } else {
-                    triesLeft -= 1;
                     System.out.println();
-                    System.out.println("Wrong pin. Try again.");
-                    System.out.println("Tries left: " + triesLeft);
-                    System.out.print("Please enter your pin: ");
+                    triesLeft -= 1;
+                    if (triesLeft != 0) {
+                        System.out.println("Wrong pin. Try again.");
+                        System.out.println("Tries left: " + triesLeft);
+                        System.out.print("Please enter your pin: ");
+                    }
+
                 }
             }
             System.out.println();
