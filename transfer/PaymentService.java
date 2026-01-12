@@ -39,6 +39,17 @@ public class PaymentService implements TransactionTransferSystem {
         this.serviceName = serviceName;
     }
 
+    /**
+     * No need for documentation here! This method is defined and
+     * documented in the given interface. The documentation is inherited
+     * automatically from the interface. If you want to add additional
+     * documentation to an implemented method, you can use {&#64;inheritDoc}
+     * (see below).
+     * <br />
+     * <br />
+     * {@inheritDoc}
+     */
+
     @Override
     public boolean submitTransaction(Transaction transaction) {
         if (transaction == null || transaction.getFinishDate() != null)

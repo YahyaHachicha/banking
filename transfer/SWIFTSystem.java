@@ -11,9 +11,6 @@ public class SWIFTSystem implements TransactionTransferSystem {
     public static final TransactionTransferSystem SWIFT_INSTANCE = new SWIFTSystem(SWIFT_BANKS_COUNT);
     private int maxBanks, bankCount = 0;
     SWIFTBank[] banks;
-
-    // TODO:
-
     /**
      * Creates a simple transaction transfer system for the
      * given maximum number of executors (banks).
@@ -24,6 +21,17 @@ public class SWIFTSystem implements TransactionTransferSystem {
         this.maxBanks = size;
         banks = new SWIFTBank[maxBanks];
     }
+
+    /**
+     * No need for documentation here! This method is defined and
+     * documented in the given interface. The documentation is inherited
+     * automatically from the interface. If you want to add additional
+     * documentation to an implemented method, you can use {&#64;inheritDoc}
+     * (see below).
+     * <br />
+     * <br />
+     * {@inheritDoc}
+     */
 
     @Override
     public boolean submitTransaction(Transaction tx) {
