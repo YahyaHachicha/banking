@@ -23,12 +23,20 @@ public class CheckingAccount implements BankAccount {
 
     }
 
+    /**
+     * This method returns the BankAccount variant type.
+     * @return AccountTyp of this BankAccount.
+     */
     @Override
     public final AccountType getAccountType() {
         // TODO:
         return AccountType.Checking;
     }
 
+    /**
+     * Closes the banking account by withdrawing the money for checking accounts
+     * or for savings accounts, depositing the money back to the checking account.
+     */
     @Override
     public final void closeAccount() {
         //TODO:
@@ -38,6 +46,11 @@ public class CheckingAccount implements BankAccount {
         }
     }
 
+    /**
+     * This method validates if a pin is valid for this account.
+     * @param pin the pin that should be validated
+     * @return true, iff the pin fits to this account, false otherwise
+     */
     @Override
     public boolean validatePin(int pin) {
         // TODO:
@@ -47,36 +60,64 @@ public class CheckingAccount implements BankAccount {
         return false;
     }
 
+    /**
+     * Returns the customer that owns this account.
+     *
+     * @return the owner of this account
+     */
     @Override
     public Customer getOwner() {
         // TODO:
         return baseAccount.getOwner();
     }
 
+    /**
+     * Returns the account number of this account.
+     *
+     * @return the account number of this account
+     */
     @Override
     public int getAccountNumber() {
         // TODO:
         return baseAccount.getAccountNumber();
     }
 
+    /**
+     * Returns the current balance of this account.
+     * @return the current balance of this account
+     */
     @Override
     public double getBalance() {
         // TODO:
         return baseAccount.getBalance();
     }
 
+    /**
+     * This method removes money from this account.
+     * This is only valid for positive numbers and if money <= balance.
+     * @param money a positive amount of money
+     */
     @Override
     public void withdrawMoney(double money) {
         // TODO:
         baseAccount.withdrawMoney(money);
     }
 
+    /**
+     * This method adds money to this account.
+     * This is only valid for positive numbers.
+     * @param money -  a positive amount of money
+     */
     @Override
     public void depositMoney(double money) {
         // TODO:
         baseAccount.depositMoney(money);
     }
 
+    /**
+     * This method returns a description of this account.
+     * @return a string description of this account
+     */
     @Override
     public final String getAccountInformation(){
         // TODO:

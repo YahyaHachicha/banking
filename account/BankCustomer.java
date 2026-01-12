@@ -28,11 +28,19 @@ public class BankCustomer implements Customer {
         this.address = address;
     }
 
+    /**
+     * returns the last name of the customer.
+     * @return the last name of the customer.
+     */
     public String getLastname() {
         // TODO:
         return this.lastname;    
     }
 
+    /**
+     * returns the unique customer number.
+     * @return the unique customer number.
+     */
     public int getCustomerNumber() {
         // TODO:
         return customerNumber;
