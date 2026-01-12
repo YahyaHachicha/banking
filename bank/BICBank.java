@@ -57,6 +57,17 @@ public class BICBank implements SWIFTBank {
         this.tts = tts;
     }
 
+    /**
+     * No need for documentation here! This method is defined and
+     * documented in the given interface. The documentation is inherited
+     * automatically from the interface. If you want to add additional
+     * documentation to an implemented method, you can use {&#64;inheritDoc}
+     * (see below).
+     * <br />
+     * <br />
+     * {@inheritDoc}
+     */
+
     @Override
     public boolean executeTransaction(Transaction transaction) {
         // TODO:
@@ -73,7 +84,7 @@ public class BICBank implements SWIFTBank {
             boolean success = transferWithinBank(transaction.getFromAccountNumber(), transaction.getRecipientLastName(), transaction.getToAccountNumber(), transaction.getAmount());
 
             if (success) {
-                transaction.setFinishDate(new Date());
+                transaction.setFinishDate(new Date(System.currentTimeMillis()));
                 baseBank.addTransaction(transaction);
             }
             return success;
@@ -81,7 +92,7 @@ public class BICBank implements SWIFTBank {
 
         // 3. Externe Überweisung
 
-        // Wir müssen Senderkonto überprüfen
+        // Wir müssen Senderkonto und -daten und Empfängerkonto und -daten überprüfen
         if (sender == null || transaction.getSenderLastName() == null)
             return false;
 
@@ -106,8 +117,7 @@ public class BICBank implements SWIFTBank {
         boolean success = tts.submitTransaction(transaction);
 
         if (success) {
-            // Erfolg
-            transaction.setFinishDate(new Date());
+            transaction.setFinishDate(new Date(System.currentTimeMillis()));
             baseBank.addTransaction(transaction);
         }
         return success;

@@ -213,6 +213,9 @@ public class BaseBank implements Bank {
         return slice;
     }
 
+    /* Uses the addTransaction method from the Class TransactionBuffer to add a transaction to its buffer.
+     * @param tx the transaction to be added.
+     */
     public void addTransaction(Transaction tx) {
         this.transactionBuffer.addTransaction(tx);
     }
