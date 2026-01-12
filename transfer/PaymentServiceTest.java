@@ -3,6 +3,7 @@ package banking.transfer;
 import banking.account.BankCustomer;
 import banking.account.Customer;
 import banking.bank.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * A simple TransactionTransferSystem without a SWIFTBank by senders.
@@ -11,27 +12,45 @@ import banking.bank.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PaymentServiceTest {
-    public final static String GooglePayBankName = "GooglePay";
-    public final static String ApplePayBankName = "ApplePay";
-    public final static String PayPalBankName = "PayPal";
-    public final static String WeroBankName = "Wero";
-    public final static String MoneyGramBankName = "MoneyGram";
-    public final static String KlarnaName = "Klarna";
-    public final static String WesternUnionName = "WesternUnion";
+    @Test
+    void successCashPaymentViaPaymentService(){
+        SWIFTBank receiverBank = new BICBank("Volksbank",10,10);
+        Customer customer = new BankCustomer("Yahya", "Hachicha", null, null);
+        receiverBank.registerCustomer(customer);
+        int access = receiverBank.createCheckingBankAccount(customer.getCustomerNumber(), 43210);
 
-    public static final PaymentService GOOGLE_PAY = new PaymentService(GooglePayBankName);
+        Transaction transaction1 = new Transaction(0, "Hachicha", 0, "Meinken", 99.9, receiverBank);
 
-    public static final PaymentService APPLE_PAY = new PaymentService(ApplePayBankName);
+        boolean result = PaymentService.PAYPAL.submitTransaction(transaction1);
 
-    public static final PaymentService PAYPAL = new PaymentService(PayPalBankName);
+        assertTrue(result);
+    }
 
-    public static final PaymentService WERO = new PaymentService(WeroBankName);
+    @Test
+    void failureSubmitNullTransaction(){
+        boolean result = PaymentService.WERO.submitTransaction(null);
 
-    public static final PaymentService MONEY_GRAM = new PaymentService(MoneyGramBankName);
+        assertFalse(result);
+    }
 
-    public static final PaymentService KLARNA = new PaymentService(KlarnaName);
+    @Test
+    void finishedTransaction(){
+        Transaction transaction2 = new Transaction(0, "Hachicha", 1, "Meinken", 10.0, null, null);
+        transaction2.setFinishDate(null);
+        boolean result = PaymentService.KLARNA.submitTransaction(transaction2);
+        assertFalse(result);
+    }
 
-    public static final PaymentService WESTERN_UNION = new PaymentService(WesternUnionName);
+    @Test
+    void unknownService(){
+        SWIFTBank bank = PaymentService.APPLE_PAY.getByName("UnknownService");
+        assertNull(bank);
+    }
 
-
+    @Test
+    void successPaymentService(){
+        SWIFTBank bank = new BICBank("Sparkasse", 5, 5);
+        boolean result = PaymentService.MONEY_GRAM.register(bank);
+        assertTrue(result);
+    }
 }
