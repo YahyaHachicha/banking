@@ -1,7 +1,11 @@
 package banking.transfer;
 
+import banking.account.BankCustomer;
+import banking.account.Customer;
+import banking.bank.BICBank;
 import banking.bank.SWIFTBank;
 import banking.bank.Transaction;
+import org.junit.jupiter.api.Test;
 
 /**
  * A simple TransactionTransferSystem via SWIFTBanks.
@@ -9,7 +13,8 @@ import banking.bank.Transaction;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SWIFTSystemTest {
-    void failedSumbitTransactionOnlyCash(){
+    @Test
+    void failedSubmitTransactionOnlyCash(){
         Transaction transaction1 = new Transaction(1, "Hachicha", 2, "Meinken", 1000, null, null);
 
         boolean result = SWIFTSystem.SWIFT_INSTANCE.submitTransaction(transaction1);
@@ -17,10 +22,13 @@ class SWIFTSystemTest {
         assertFalse(result);
     }
 
-    void failedSubmitTranscationFake(){
+    @Test
+    void failedSubmitTransactionFake(){
+        SWIFTBank receiverBank = new BICBank("Volksbank",10,10);
+        Customer customer = new BankCustomer("Yahya", "Hachicha", null, null);
         SWIFTBank fakeBank = new fakeSWIFTBank("FakeBank");
 
-        Transaction transaction2 = new Transaction(1, "Hachicha", 2, "Meinken", 1000, fakeBank, fakeBank);
+        Transaction transaction2 = new Transaction(1, "Hachicha", 2, "Meinken", 1000, fakeBank, receiverBank);
 
         boolean result = SWIFTSystem.SWIFT_INSTANCE.submitTransaction(transaction2);
 

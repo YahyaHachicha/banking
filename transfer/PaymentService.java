@@ -52,9 +52,10 @@ public class PaymentService implements TransactionTransferSystem {
 
     @Override
     public boolean submitTransaction(Transaction transaction) {
-        if (transaction == null || transaction.getFinishDate() != null)
+        if (transaction == null || transaction.getFinishDate() != null || transaction.getToBank() == null)
             return false;
 
+        //temporäres Bankkonto erstellen und Transaktion submitten
         if (transaction.getFromBank() == null) {
             SWIFTBank banktmp = new BICBank(serviceName, 1, 1);
             Customer customertmp = new BankCustomer(serviceName, serviceName, null, null);

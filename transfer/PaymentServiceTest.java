@@ -19,7 +19,7 @@ class PaymentServiceTest {
         receiverBank.registerCustomer(customer);
         int access = receiverBank.createCheckingBankAccount(customer.getCustomerNumber(), 43210);
 
-        Transaction transaction1 = new Transaction(0, "Hachicha", 0, "Meinken", 99.9, receiverBank);
+        Transaction transaction1 = new Transaction(0, "Hachicha", 0, "Meinken", 99.9, null, receiverBank);
 
         boolean result = PaymentService.PAYPAL.submitTransaction(transaction1);
 
@@ -35,10 +35,15 @@ class PaymentServiceTest {
 
     @Test
     void finishedTransaction(){
-        Transaction transaction2 = new Transaction(0, "Hachicha", 1, "Meinken", 10.0, null, null);
+        SWIFTBank receiverBank = new BICBank("Volksbank",10,10);
+        Customer customer = new BankCustomer("Yahya", "Hachicha", null, null);
+        receiverBank.registerCustomer(customer);
+        int access = receiverBank.createCheckingBankAccount(customer.getCustomerNumber(), 43210);
+
+        Transaction transaction2 = new Transaction(0, "Hachicha", 1, "Meinken", 10.0, null, receiverBank);
         transaction2.setFinishDate(null);
         boolean result = PaymentService.KLARNA.submitTransaction(transaction2);
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test

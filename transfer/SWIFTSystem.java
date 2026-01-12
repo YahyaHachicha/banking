@@ -80,8 +80,10 @@ public class SWIFTSystem implements TransactionTransferSystem {
     @Override
     public SWIFTBank getByName(String bankName) {
         for (SWIFTBank banktmp : banks) {
-            if (banktmp.getInstitutionName().equals(bankName)) {
-                return banktmp;
+            if (banktmp != null) {
+                if (banktmp.getInstitutionName().equals(bankName)) {
+                    return banktmp;
+                }
             }
         }
         return null;
