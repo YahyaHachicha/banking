@@ -11,6 +11,11 @@ import java.util.Scanner;
  *
  */
 public class BankStatementPrinter {
+
+    /* Greets the customer and asks for a account number using the terminal.
+     * @param bank is the bank the user wants to enter the account number from.
+     * @return the result of printStatementOf
+     */
     public static boolean printStatement(Bank bank) {
         Scanner scanner1 = new Scanner(System.in);
         System.out.println("**********************************************************");
@@ -21,6 +26,11 @@ public class BankStatementPrinter {
         return printStatementOf(bank, scanner1.nextInt());
     }
 
+    /* Using the account number from printStatement this method validates the pin and shows the account balance.
+     * @param bank is the bank which the account belongs to.
+     * @param accountNumer is the account number of which the balance should be displayed.
+     * @return true, if the account balance could be shown and accessed, or false if it didn't work because of a wrong pin or insufficient access to the terminal.
+     */
     public static boolean printStatementOf(Bank bank, int accountNumber) {
         if (bank.getBankAccount(accountNumber) != null) { //getbankaccount muss durch alle bankaccounts der institution laufen
             int triesLeft = 4;
