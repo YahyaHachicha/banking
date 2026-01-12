@@ -8,9 +8,8 @@ import java.util.Date;
  */
 public class BankCustomer implements Customer {
     // TODO:
-    private String firstname, lastname, address;
+    private String firstname, lastname, birthday, address;
     private int  customerNumber;
-    private Date birthday;
 
     /**
      * Constructor to create a finance.banking.account.BankCustomer.
@@ -20,7 +19,7 @@ public class BankCustomer implements Customer {
      * @param birthday       the birthday
      * @param address        the address
      */
-    public BankCustomer(String firstname, String lastname, Date birthday, String address) {
+    public BankCustomer(String firstname, String lastname, String birthday, String address) {
         // TODO:
         this.firstname = firstname;
         this.lastname = lastname;
@@ -61,7 +60,7 @@ public class BankCustomer implements Customer {
      *
      * @return the date of birth
      */
-    public Date getBirthday() {
+    public String getBirthday() {
         // TODO:
         return this.birthday;
     }
@@ -111,7 +110,7 @@ public class BankCustomer implements Customer {
      *
      * @param birthday the new birthday
      */
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         // TODO:
         this.birthday = birthday;
     }
